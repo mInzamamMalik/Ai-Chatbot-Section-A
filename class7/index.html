@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+
+
+        let getAvg = function(val1, val2, val3) {
+            console.log("i am running")
+
+            let sum = val1 + val2 + val3
+
+            let result = sum / 3;
+
+            return result
+        }
+
+        // let returnVal = getAvg(12, 45, 23);
+
+        // console.log("returnVal: ", returnVal);
+
+
+
+
+         // why we make funcitons:
+        // 1. to avoide code repeatation
+        // 2. black boxing or hiding complexity
+        // 3. we change in function it get changed everywhere
+
+        // function is first class citizen in javascript
+        // it can be stored in variable
+        // can be passed to another function
+        // can be returned as value from another function
+
+        // function dont take space in memory,
+        // instead it handles it on compile time
+
+        // function dont run,
+        // instead it make a copy/instance and run it, 
+        // after running it destroy that copy/instance
+
+
+        // malikHairCut()
+
+        // function malikHairCut() {
+        //     console.log("doing it");
+        // }
+        // malikHairCut()
+        // malikHairCut()
+
+        // let MHC = function () {
+        //     console.log("doing it");
+        // }
+        // MCH();
+
+
+        // // 1st way // hoisting yes
+        // function myFunction(input1, input2) {
+        //     console.log("doing the job");
+        //     return (input1 + input2)
+        // }
+        // console.log(myFunction(2, 7));
+
+        // // 2nd way
+        // // anonymous function
+        // // hoisting - no
+        // var myFunction1 = function (input1, input2) {
+        //     console.log("doing the job");
+        //     return (input1 + input2)
+        // }
+        // myFunction1("india", "pakistan")
+
+
+        // // 3rd way
+        // // es6
+        // // hoisting - no
+        // const myFunction2 = (input1, input2) => {
+        //     console.log("doing the job");
+        //     return (input1 + input2)
+        // }
+
+        // // 4th way
+        // // es6
+        // // hositing - no
+        // const myfunction3 = (input1, input2) => (input1 + input2);
+
+        // // 4th way
+        // // es6
+        // // hositing - no
+        // const getCube = input => (input * input * input);
+
+
+
+
+
+
+    </script>
+
+
+</body>
+
+</html>
