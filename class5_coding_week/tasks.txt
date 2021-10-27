@@ -7,7 +7,7 @@ Rules:
 7) each of your task should be hosted in github pages, and the url should be mentioned in your repository
 8) if anyone will not push the code in github, he will be considered absent that day, and will be reposible for the consequences
 9) you must have to take input from user, hard coded values are prohabited
-10 understanding the questions is the part of this task.
+10) understanding the questions is the part of this task.
 
 Goal: 
 goal of this coding week is to give you hands on practice opportunity of what you have learned sofar
@@ -45,7 +45,7 @@ Expected Output :
 mm-dd-yyyy, mm/dd/yyyy or dd-mm-yyyy, dd/mm/yyyy
 
 3. Write a JavaScript program to find the area of a triangle where lengths of the 
-three of its sides are 5, 6, 7
+three of its sides are 5, 6, 7 
 
 
 4. Write a JavaScript program to rotate the string 'Saylani' in 

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+
+
+        // 4, 6, 12, 18, 19
+
+
+        // task 4:
+        let userInput = "Pakistan zinda bad ";
+        nameArr = userInput.split("");
+        console.log("nameArr: ", nameArr);
+
+        // for (var i = 0; i > nameArr.length; i++) {
+        //     let lastLetter = nameArr.pop();
+        //     nameArr.unshift(lastLetter);
+        //     console.log("nameArr: ", nameArr);
+        // }
+
+        setInterval(() => {
+           
+            let lastLetter = nameArr.pop();
+            nameArr.unshift(lastLetter);
+            // console.log("nameArr: ", nameArr);
+            document.getElementById("result").innerText = nameArr.join("");
+        
+        }, 100);
+
+
+
+
+
+
+
+        // for (let i = 2014; i < 2051; i++) {
+
+        //     let thisYear = new Date(`1/1/${i}`);
+
+        //     console.log("thisYear: ", thisYear);
+
+        //     let day = thisYear.getDay();
+        //     console.log("day: ", day);
+
+        //     if (day === 0) {
+        //         console.log(`1st january ${i} is sunday`);
+        //     }else{
+        //         console.log(`1st january ${i} is not sunday`);
+        //     }
+        // }
+
+
+        // task 10
+        // //(0°C × 9/5) + 32 = 32°F
+
+        // let far = 10;
+        // let formula = far * (9 / 5)
+        // let ans = formula + 32
+        // console.log("Ans=>", ans)
+
+        // let fahrenheitTemp = 50;
+        // let fahrenheit = (fahrenheitTemp - 32) * (5 / 9);
+        // console.log(fahrenheit)
+
+
+        // // task 12
+        // let userInput = 5;
+
+        // let twentyth100 = 100 / 20;
+        // let twentyth400 = 400 / 20;
+
+        // if (userInput <= twentyth100) { // 5
+        //     console.log("given number is within 20th of 100");
+
+        // } else if (userInput <= twentyth400) { // 20
+        //     console.log("given number is within 20th of 400");
+
+        // } else {
+        //     console.log("given number is greater then both");
+
+        // }
+
+
+        // let arr = [2, 5, 3, 5, 6, 23, 43, 212, 32, 23];
+
+        // let min = arr.min;
+        // let max = arr.max;
+
+        // console.log("min max: ", min, max);
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+    <h1 id="result" ></h1>
+
+</body>
+
+</html>
