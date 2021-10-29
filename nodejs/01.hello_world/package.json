@@ -1,0 +1,23 @@
+{
+  "name": "ai-chatbot-section-b",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://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@github.com/malikasinger1/Ai-Chatbot-Section-B.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/malikasinger1/Ai-Chatbot-Section-B/issues"
+  },
+  "homepage": "https://github.com/malikasinger1/Ai-Chatbot-Section-B#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
