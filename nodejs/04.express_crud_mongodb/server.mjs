@@ -64,13 +64,13 @@ app.post('/user', (req, res) => {
 app.put('/user/:id', (req, res) => {
   let updateObj = {}
 
-  if (req.body.name) {
+  if (req.body.name === "" || req.body.name) {
     updateObj.name = req.body.name
   }
-  if (req.body.email) {
+  if (req.body.email === "" || req.body.email) {
     updateObj.email = req.body.email
   }
-  if (req.body.address) {
+  if (req.body.address === "" || req.body.address) {
     updateObj.address = req.body.address
   }
 
