@@ -1,0 +1,48 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "malik weather assistant",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "WeatherIntent",
+          "slots": [
+            {
+              "name": "cityName",
+              "type": "AMAZON.City"
+            }
+          ],
+          "samples": [
+            "todays weather in {cityName}",
+            "tell me {cityName} weather",
+            "whats the weather of {cityName}",
+            "what\u0027s the temprature",
+            "weather update",
+            "tell me weather"
+          ]
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        }
+      ],
+      "types": []
+    }
+  },
+  "version": "3"
+}
