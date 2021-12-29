@@ -1,0 +1,19 @@
+{
+  "name": "abcadfdf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "nodemon server.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ask-sdk-core": "^2.11.0",
+    "ask-sdk-express-adapter": "^2.11.0",
+    "express": "^4.17.2",
+    "morgan": "^1.10.0"
+  }
+}
