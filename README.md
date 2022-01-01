@@ -20,3 +20,5 @@ missing library doc:
 https://titanwolf.org/Network/Articles/Article?AID=c80dce87-d818-423e-882f-568ae244259c
 
 code example: https://codesandbox.io/s/j1cbr
+
+https://www.c-sharpcorner.com/article/getting-an-email-address-in-an-alexa-skill2/

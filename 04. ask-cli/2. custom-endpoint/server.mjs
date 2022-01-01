@@ -27,7 +27,7 @@ const LaunchRequestHandler = {
     return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
   },
   handle(handlerInput) {
-    const speakOutput = 'Welcome, you can say Hello or Help. Which would you like to try?';
+    const speakOutput = 'Welcome from express, you can say Hello or Help. Which would you like to try?';
 
     return handlerInput.responseBuilder
       .speak(speakOutput)
@@ -62,7 +62,7 @@ const skillBuilder = SkillBuilders.custom()
 const skill = skillBuilder.create();
 const adapter = new ExpressAdapter(skill, false, false);
 
-app.post('/webhook', adapter.getRequestHandlers());
+app.post('/api/v1/webhook-alexa', adapter.getRequestHandlers());
 
 app.use(express.json())
 app.get('/profile', (req, res, next) => {
