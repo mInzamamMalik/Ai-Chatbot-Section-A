@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "kababjee\u0027s restaurant",
+      "invocationName": "malik restaurant",
       "intents": [
         {
           "name": "AMAZON.CancelIntent",

@@ -3,6 +3,7 @@ import Alexa, { SkillBuilders } from 'ask-sdk-core';
 import morgan from "morgan";
 import { ExpressAdapter } from 'ask-sdk-express-adapter';
 import mongoose from 'mongoose';
+import axios from "axios";
 
 
 mongoose.connect('mongodb+srv://dbuser:dbpassword@cluster0.nr4e4.mongodb.net/chatbotdb?retryWrites=true&w=majority');
@@ -24,7 +25,7 @@ const ErrorHandler = {
     return true;
   },
   handle(handlerInput, error) {
-    const speakOutput = 'Sorry, I had trouble doing what you asked. Please try again.';
+    const speakOutput = 'Fallback intent: Sorry, I had trouble doing what you asked. Please try again.';
     console.log(`~~~~ Error handled: ${JSON.stringify(error)}`);
 
     return handlerInput.responseBuilder
@@ -79,37 +80,42 @@ const EmailIntentHandler = {
   },
   async handle(handlerInput) {
     const { serviceClientFactory, responseBuilder } = handlerInput;
+
+    const apiAccessToken = Alexa.getApiAccessToken(handlerInput.requestEnvelope)
+    console.log("apiAccessToken: ", apiAccessToken);
+
     try {
-      const upsServiceClient = serviceClientFactory.getUpsServiceClient();
+      // https://developer.amazon.com/en-US/docs/alexa/custom-skills/request-customer-contact-information-for-use-in-your-skill.html#get-customer-contact-information
+      const response = await axios.get("https://api.amazonalexa.com/v2/accounts/~current/settings/Profile.email",
+        { headers: { Authorization: `Bearer ${apiAccessToken}` } },
+      )
+      const email = response.data;
+      console.log("email: ", email);
 
-      console.log("upsServiceClient: ", upsServiceClient);
-      const profileEmail = await upsServiceClient.getProfileEmail();
-      console.log("profileEmail: ", profileEmail);
-      if (!profileEmail) {
-        const noEmailResponse = `It looks like you are not having an email set. You can set your email from the companion app.`
-        return responseBuilder
-          .speak(noEmailResponse)
+      if (!email) {
+        return handlerInput.responseBuilder
+          .speak(`looks like you dont have an email associated with this device, please set your email in Alexa App Settings`)
           .getResponse();
       }
-      const speechResponse = `Your email is, ${profileEmail}`;
-      return responseBuilder
-        .speak(speechResponse)
+      return handlerInput.responseBuilder
+        .speak(`your email is: ${email}`)
         .getResponse();
+
     } catch (error) {
-      console.log("error: ", JSON.stringify(error));
-      if (true) {
+      console.log("error code: ", error.response.status);
+
+      if (error.response.status === 403) {
         return responseBuilder
-          .speak(messages.NOTIFY_MISSING_PERMISSIONS)
-          .withAskForPermissionsConsentCard([EMAIL_PERMISSION])
+          .speak('I am Unable to read your email. Please goto Alexa app and then goto Malik Resturant Skill and Grant Profile Permissions to this skill')
+          .withAskForPermissionsConsentCard(["alexa::profile:email:read"]) // https://developer.amazon.com/en-US/docs/alexa/custom-skills/request-customer-contact-information-for-use-in-your-skill.html#sample-response-with-permissions-card
           .getResponse();
       }
-      console.log("error2: ", JSON.stringify(error));
-      const response = responseBuilder.speak(messages.ERROR).getResponse();
-      return response;
+      return responseBuilder
+        .speak('Uh Oh. Looks like something went wrong.')
+        .getResponse();
     }
-  },
+  }
 }
-
 
 
 const deviceIdHandler = {
@@ -120,11 +126,14 @@ const deviceIdHandler = {
   handle(handlerInput) {
 
     let deviceId = Alexa.getDeviceId(handlerInput.requestEnvelope)
+    let userId = Alexa.getUserId(handlerInput.requestEnvelope)
+
     console.log("deviceId: ", deviceId); // amzn1.ask.device.AEIIZKO24SOSURK7U32HYTGXRQND5VMWQTKZDZOVVKFVIBTHIDTGJNXGQLO5TKAITDM756X5AHOESWLLKZADIMJOAM43RKPADYXEHRMI7V6ESJPWWHE34E37GPJHHG2UVZSTUKF3XJUWD5FINAUTKIB5QBIQ
-    const speakOutput = `your device id is ${deviceId}`
+    const speakOutput = `your device id is: ${deviceId} \n\n\nand your user id is: ${userId}`
 
     return handlerInput.responseBuilder
       .speak(speakOutput)
+      .reprompt(speakOutput)
       .getResponse();
   }
 };
