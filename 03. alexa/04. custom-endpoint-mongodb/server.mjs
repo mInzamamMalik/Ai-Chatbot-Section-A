@@ -105,11 +105,18 @@ const EmailIntentHandler = {
 
     try {
       // https://developer.amazon.com/en-US/docs/alexa/custom-skills/request-customer-contact-information-for-use-in-your-skill.html#get-customer-contact-information
+
+      const responseArray = await Promise.all([
+        axios.get("https://api.amazonalexa.com/v2/accounts/~current/settings/Profile.email",
+          { headers: { Authorization: `Bearer ${apiAccessToken}` } },
+        ),
+        axios.get("https://api.amazonalexa.com/v2/accounts/~current/settings/Profile.name",
+          { headers: { Authorization: `Bearer ${apiAccessToken}` } },
+        ),
+      ])
       
-      const response = await axios.get("https://api.amazonalexa.com/v2/accounts/~current/settings/Profile.email",
-        { headers: { Authorization: `Bearer ${apiAccessToken}` } },
-      )
-      const email = response.data;
+      const email = responseArray[0].data;
+      const name = responseArray[1].data;
       console.log("email: ", email);
 
       if (!email) {
@@ -118,7 +125,7 @@ const EmailIntentHandler = {
           .getResponse();
       }
       return handlerInput.responseBuilder
-        .speak(`your email is: ${email}`)
+        .speak(`Dear ${name}, your email is: ${email}`)
         .getResponse();
 
     } catch (error) {
