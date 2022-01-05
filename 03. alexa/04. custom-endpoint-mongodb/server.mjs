@@ -5,7 +5,6 @@ import { ExpressAdapter } from 'ask-sdk-express-adapter';
 import mongoose from 'mongoose';
 import axios from "axios";
 
-
 mongoose.connect('mongodb+srv://dbuser:dbpassword@cluster0.nr4e4.mongodb.net/chatbotdb?retryWrites=true&w=majority');
 
 const Usage = mongoose.model('Usage', {
@@ -13,7 +12,6 @@ const Usage = mongoose.model('Usage', {
   clientName: String,
   createdOn: { type: Date, default: Date.now },
 });
-
 
 const app = express();
 app.use(morgan("dev"))
@@ -41,7 +39,7 @@ const LaunchRequestHandler = {
   handle(handlerInput) {
 
     var newUsage = new Usage({
-      skillName: "saylani skill",
+      skillName: "food ordering skill",
       clientName: "saylani class",
     }).save();
 
@@ -73,6 +71,27 @@ const showMenuHandler = {
   }
 };
 
+
+const deviceIdHandler = {
+  canHandle(handlerInput) {
+    return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+      && Alexa.getIntentName(handlerInput.requestEnvelope) === 'deviceId';
+  },
+  handle(handlerInput) {
+
+    let deviceId = Alexa.getDeviceId(handlerInput.requestEnvelope)
+    let userId = Alexa.getUserId(handlerInput.requestEnvelope)
+
+    console.log("deviceId: ", deviceId); // amzn1.ask.device.AEIIZKO24SOSURK7U32HYTGXRQND5VMWQTKZDZOVVKFVIBTHIDTGJNXGQLO5TKAITDM756X5AHOESWLLKZADIMJOAM43RKPADYXEHRMI7V6ESJPWWHE34E37GPJHHG2UVZSTUKF3XJUWD5FINAUTKIB5QBIQ
+    const speakOutput = `your device id is: ${deviceId} \n\n\nand your user id is: ${userId}`
+
+    return handlerInput.responseBuilder
+      .speak(speakOutput)
+      .reprompt(speakOutput)
+      .getResponse();
+  }
+};
+
 const EmailIntentHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
@@ -86,6 +105,7 @@ const EmailIntentHandler = {
 
     try {
       // https://developer.amazon.com/en-US/docs/alexa/custom-skills/request-customer-contact-information-for-use-in-your-skill.html#get-customer-contact-information
+      
       const response = await axios.get("https://api.amazonalexa.com/v2/accounts/~current/settings/Profile.email",
         { headers: { Authorization: `Bearer ${apiAccessToken}` } },
       )
@@ -117,26 +137,6 @@ const EmailIntentHandler = {
   }
 }
 
-
-const deviceIdHandler = {
-  canHandle(handlerInput) {
-    return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-      && Alexa.getIntentName(handlerInput.requestEnvelope) === 'deviceId';
-  },
-  handle(handlerInput) {
-
-    let deviceId = Alexa.getDeviceId(handlerInput.requestEnvelope)
-    let userId = Alexa.getUserId(handlerInput.requestEnvelope)
-
-    console.log("deviceId: ", deviceId); // amzn1.ask.device.AEIIZKO24SOSURK7U32HYTGXRQND5VMWQTKZDZOVVKFVIBTHIDTGJNXGQLO5TKAITDM756X5AHOESWLLKZADIMJOAM43RKPADYXEHRMI7V6ESJPWWHE34E37GPJHHG2UVZSTUKF3XJUWD5FINAUTKIB5QBIQ
-    const speakOutput = `your device id is: ${deviceId} \n\n\nand your user id is: ${userId}`
-
-    return handlerInput.responseBuilder
-      .speak(speakOutput)
-      .reprompt(speakOutput)
-      .getResponse();
-  }
-};
 
 
 const skillBuilder = SkillBuilders.custom()
