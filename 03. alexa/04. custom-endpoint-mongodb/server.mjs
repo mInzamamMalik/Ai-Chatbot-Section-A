@@ -13,6 +13,17 @@ const Usage = mongoose.model('Usage', {
   createdOn: { type: Date, default: Date.now },
 });
 
+
+const Cart = mongoose.model('Cart', {
+  items: [{
+    dishName: String,
+    quantity: Number
+  }],
+  email: String,
+  customerName: String,
+  createdOn: { type: Date, default: Date.now },
+});
+
 const app = express();
 app.use(morgan("dev"))
 const PORT = process.env.PORT || 3000;
@@ -164,16 +175,28 @@ const PlaceOrderIntentHandler = {
     console.log("dishName: ", dishName);
     console.log("qty: ", qty);
 
+    if (!dishName) {
+      const cardText = '1. Beef kabab \n2. Mutton kabab \n3. Chicken Reshmi kabab \n4. Gola kabab \n5. Seekh kabab.';
 
+      return handlerInput.responseBuilder
+        .speak(`please tell me dish name. or you can ask for the menu.`)
+        .reprompt(`please tell me dish name. or you can ask for the menu.`)
+        .withSimpleCard("Our Menu", cardText)
+        .getResponse();
+    }
+    if (!qty) {
 
+      return handlerInput.responseBuilder
+        .speak(`how many ${dishName} would you like to order?`)
+        .reprompt(`how many ${dishName} would you like to order?`)
+        .withSimpleCard("Placing order", `how many ${dishName}?`)
+        .getResponse();
 
-
-
+    }
 
     const { serviceClientFactory, responseBuilder } = handlerInput;
-
     const apiAccessToken = Alexa.getApiAccessToken(handlerInput.requestEnvelope)
-    console.log("apiAccessToken: ", apiAccessToken);
+    // console.log("apiAccessToken: ", apiAccessToken);
 
     try {
       // https://developer.amazon.com/en-US/docs/alexa/custom-skills/request-customer-contact-information-for-use-in-your-skill.html#get-customer-contact-information
@@ -196,9 +219,52 @@ const PlaceOrderIntentHandler = {
           .speak(`looks like you dont have an email associated with this device, please set your email in Alexa App Settings`)
           .getResponse();
       }
-      return handlerInput.responseBuilder
-        .speak(`Dear ${name}, your email is: ${email}`)
-        .getResponse();
+
+
+      // let newCart = new Cart({
+      //   email: email,
+      //   customerName: name,
+      //   item: [{
+      //     dishName: dishName,
+      //     quantity: qty
+      //   }]
+      // })
+
+      try {
+
+        let updated = await Cart.findOneAndUpdate(
+          { email: email },
+          {
+            email: email,
+            customerName: name,
+            $push: {
+              items: [{
+                dishName: dishName,
+                quantity: qty
+              }]
+            }
+          },
+          { upsert: true }).exec();
+
+        console.log("added to cart: ", updated);
+        return handlerInput.responseBuilder
+          .speak(`Dear ${name}, ${qty} ${dishName} is added in your cart, 
+               feel free to add more dishes
+               or say checkout to complete your order`)
+          .getResponse();
+
+
+      } catch (err) {
+        console.log("error in db: ", err);
+        return handlerInput.responseBuilder
+          .speak(`something went wrong in db operation`)
+          .getResponse();
+      }
+
+
+
+
+
 
     } catch (error) {
       console.log("error code: ", error.response.status);
