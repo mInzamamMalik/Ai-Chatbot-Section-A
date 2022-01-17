@@ -24,6 +24,16 @@ const Cart = mongoose.model('Cart', {
   createdOn: { type: Date, default: Date.now },
 });
 
+const OrderModel = mongoose.model('Order', {
+  items: [{
+    dishName: String,
+    quantity: Number
+  }],
+  email: String,
+  customerName: String,
+  createdOn: { type: Date, default: Date.now },
+});
+
 const app = express();
 app.use(morgan("dev"))
 const PORT = process.env.PORT || 3000;
@@ -283,13 +293,142 @@ const PlaceOrderIntentHandler = {
 }
 
 
+const checkOutIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && handlerInput.requestEnvelope.request.intent.name === 'checkOut';
+  },
+  async handle(handlerInput) {
+
+    const slots = handlerInput
+      .requestEnvelope
+      .request
+      .intent
+      .slots;
+
+    const confirmation = slots.confirmation.value;
+    console.log("confirmation: ", confirmation);
+
+    try {
+      // https://developer.amazon.com/en-US/docs/alexa/custom-skills/request-customer-contact-information-for-use-in-your-skill.html#get-customer-contact-information
+
+      const { serviceClientFactory, responseBuilder } = handlerInput;
+      const apiAccessToken = Alexa.getApiAccessToken(handlerInput.requestEnvelope)
+      // console.log("apiAccessToken: ", apiAccessToken);
+      const responseArray = await Promise.all([
+        axios.get("https://api.amazonalexa.com/v2/accounts/~current/settings/Profile.email",
+          { headers: { Authorization: `Bearer ${apiAccessToken}` } },
+        ),
+        axios.get("https://api.amazonalexa.com/v2/accounts/~current/settings/Profile.name",
+          { headers: { Authorization: `Bearer ${apiAccessToken}` } },
+        ),
+      ])
+
+      const email = responseArray[0].data;
+      const name = responseArray[1].data;
+      console.log("email: ", email);
+
+      if (!email) {
+        return handlerInput.responseBuilder
+          .speak(`looks like you dont have an email associated with this device, please set your email in Alexa App Settings`)
+          .getResponse();
+      }
+
+
+      try {
+
+        let userCart = await Cart.findOne({ email: email }).exec();
+        console.log("userCart: ", userCart);
+
+
+        if (!confirmation) {
+
+          let speech = "you have ";
+          let cardText = "";
+
+          userCart.items.map((eachItem, index) => {
+
+            if (index === (userCart.items.length - 1)) { // last item
+
+              speech += `and ${eachItem.quantity} ${eachItem.dishName}. `
+              cardText += `${index + 1}. ${eachItem.dishName} x ${eachItem.quantity}\n`
+
+            } else {
+              speech += ` ${eachItem.quantity} ${eachItem.dishName}, `
+              cardText += `${index + 1}. ${eachItem.dishName} x ${eachItem.quantity}\n`
+            }
+          })
+
+          speech += "please say yes to confirm."
+          cardText += "Are you sure?"
+
+          console.log("speech: ", speech);
+
+          return handlerInput.responseBuilder
+            .speak(speech)
+            .reprompt(`please say yes or no`)
+            .withSimpleCard("Your Cart", cardText)
+            .getResponse();
+
+
+        } else if (confirmation === "yes") {
+
+          let newOrder = new OrderModel(userCart)
+          let saved = await newOrder.save();
+
+          return handlerInput.responseBuilder
+            .speak("your order is completed, thank you.")
+            .withSimpleCard("", "Thanks you")
+            .getResponse();
+
+        } else {
+
+          return handlerInput.responseBuilder
+            .speak("ok cancel. feel free to add more items or say delete cart to start order from scratch.")
+            .reprompt("tell me a dish name or you can ask me for the menu")
+            .getResponse();
+
+        }
+
+      } catch (e) {
+        console.log(e)
+      }
+
+
+
+
+
+
+
+    } catch (error) {
+      console.log("error code: ", error.response.status);
+
+      if (error.response.status === 403) {
+        return responseBuilder
+          .speak('I am Unable to read your email. Please goto Alexa app and then goto Malik Resturant Skill and Grant Profile Permissions to this skill')
+          .withAskForPermissionsConsentCard(["alexa::profile:email:read"]) // https://developer.amazon.com/en-US/docs/alexa/custom-skills/request-customer-contact-information-for-use-in-your-skill.html#sample-response-with-permissions-card
+          .getResponse();
+      }
+      return responseBuilder
+        .speak('Uh Oh. Looks like something went wrong.')
+        .getResponse();
+    }
+
+
+
+
+  }
+}
+
+
 const skillBuilder = SkillBuilders.custom()
   .addRequestHandlers(
     LaunchRequestHandler,
     showMenuHandler,
     EmailIntentHandler,
     deviceIdHandler,
-    PlaceOrderIntentHandler
+    PlaceOrderIntentHandler,
+    checkOutIntentHandler
   )
   .addErrorHandlers(
     ErrorHandler
