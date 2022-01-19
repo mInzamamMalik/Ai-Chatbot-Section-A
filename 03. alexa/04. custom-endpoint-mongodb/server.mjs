@@ -308,6 +308,8 @@ const checkOutIntentHandler = {
 
     const confirmation = slots.confirmation.value;
     console.log("confirmation: ", confirmation);
+    const yesSyns = ["ay ay", "Affirmative", "sure", "confirm", "yes i do", "I do", "yes", "yeah", "yep", "ok"]
+
 
     try {
       // https://developer.amazon.com/en-US/docs/alexa/custom-skills/request-customer-contact-information-for-use-in-your-skill.html#get-customer-contact-information
@@ -371,10 +373,28 @@ const checkOutIntentHandler = {
             .getResponse();
 
 
-        } else if (confirmation === "yes") {
+        } else if (yesSyns.includes(confirmation)) {
 
-          let newOrder = new OrderModel(userCart)
+          // let newOrder = new OrderModel({
+          //   email: email,
+          //   items: cartData.items
+          // })
+          // const saved = await newOrder.save()
+
+          let newOrder = new OrderModel({
+            email: userCart.email,
+            customerName: userCart.customerName,
+            items: userCart.items
+          })
           let saved = await newOrder.save();
+
+          const updated = await Cart.updateOne(
+            { email: email },
+            { items: [] },
+            { upsert: true }
+          ).exec().catch(e => {
+            console.log("mongo error: ", e)
+          })
 
           return handlerInput.responseBuilder
             .speak("your order is completed, thank you.")
