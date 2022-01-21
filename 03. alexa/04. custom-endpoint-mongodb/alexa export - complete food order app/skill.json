@@ -4,7 +4,7 @@
       "custom": {
         "endpoint": {
           "sslCertificateType": "Wildcard",
-          "uri": "https://0ebc-139-135-57-27.ngrok.io/api/v1/webhook-alexa"
+          "uri": "https://14b1-192-140-145-172.ngrok.io/api/v1/webhook-alexa"
         },
         "interfaces": []
       }
@@ -12,12 +12,32 @@
     "manifestVersion": "1.0",
     "permissions": [
       {
+        "name": "alexa::profile:name:read"
+      },
+      {
         "name": "alexa::profile:email:read"
       }
     ],
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "containsAds": false,
+      "isChildDirected": false,
+      "isExportCompliant": true,
+      "locales": {
+        "en-US": {
+          "privacyPolicyUrl": "https://malikasinger1.github.io/Malik-Weather-Assistant/privacy",
+          "termsOfUseUrl": "https://malikasinger1.github.io/Malik-Weather-Assistant/privacy"
+        }
+      },
+      "usesPersonalInfo": true
+    },
     "publishingInformation": {
+      "automaticDistribution": {
+        "isActive": false
+      },
       "category": "KNOWLEDGE_AND_TRIVIA",
       "distributionCountries": [],
+      "distributionMode": "PUBLIC",
       "isAvailableWorldwide": true,
       "locales": {
         "en-US": {
@@ -28,7 +48,7 @@
             "help"
           ],
           "keywords": [],
-          "name": "saylani",
+          "name": "Malik Restaurant",
           "summary": "Sample Short Description"
         }
       },

@@ -300,14 +300,23 @@ const checkOutIntentHandler = {
   },
   async handle(handlerInput) {
 
-    const slots = handlerInput
+    console.log("envelop: ", JSON.stringify(handlerInput.requestEnvelope));
+
+
+    const dialogState = handlerInput
+      .requestEnvelope
+      .request
+      .dialogState;
+
+    const confirmationStatus = handlerInput
       .requestEnvelope
       .request
       .intent
-      .slots;
+      .confirmationStatus;
 
-    const confirmation = slots.confirmation.value;
-    console.log("confirmation: ", confirmation);
+    console.log("dialogState: ", dialogState);
+    console.log("confirmationStatus: ", confirmationStatus);
+
     const yesSyns = ["ay ay", "Affirmative", "sure", "confirm", "yes i do", "I do", "yes", "yeah", "yep", "ok"]
 
 
@@ -343,7 +352,7 @@ const checkOutIntentHandler = {
         console.log("userCart: ", userCart);
 
 
-        if (!confirmation) {
+        if (confirmationStatus === "NONE") {
 
           let speech = "you have ";
           let cardText = "";
@@ -370,10 +379,11 @@ const checkOutIntentHandler = {
             .speak(speech)
             .reprompt(`please say yes or no`)
             .withSimpleCard("Your Cart", cardText)
+            .addConfirmIntentDirective()
             .getResponse();
 
 
-        } else if (yesSyns.includes(confirmation)) {
+        } else if (confirmationStatus === "CONFIRMED") {
 
           // let newOrder = new OrderModel({
           //   email: email,
@@ -410,9 +420,9 @@ const checkOutIntentHandler = {
 
         }
 
-      } catch (e) {
-        console.log(e)
-      }
+} catch (e) {
+  console.log(e)
+}
 
 
 
@@ -421,18 +431,18 @@ const checkOutIntentHandler = {
 
 
     } catch (error) {
-      console.log("error code: ", error.response.status);
+  console.log("error code: ", error.response.status);
 
-      if (error.response.status === 403) {
-        return responseBuilder
-          .speak('I am Unable to read your email. Please goto Alexa app and then goto Malik Resturant Skill and Grant Profile Permissions to this skill')
-          .withAskForPermissionsConsentCard(["alexa::profile:email:read"]) // https://developer.amazon.com/en-US/docs/alexa/custom-skills/request-customer-contact-information-for-use-in-your-skill.html#sample-response-with-permissions-card
-          .getResponse();
-      }
-      return responseBuilder
-        .speak('Uh Oh. Looks like something went wrong.')
-        .getResponse();
-    }
+  if (error.response.status === 403) {
+    return responseBuilder
+      .speak('I am Unable to read your email. Please goto Alexa app and then goto Malik Resturant Skill and Grant Profile Permissions to this skill')
+      .withAskForPermissionsConsentCard(["alexa::profile:email:read"]) // https://developer.amazon.com/en-US/docs/alexa/custom-skills/request-customer-contact-information-for-use-in-your-skill.html#sample-response-with-permissions-card
+      .getResponse();
+  }
+  return responseBuilder
+    .speak('Uh Oh. Looks like something went wrong.')
+    .getResponse();
+}
 
 
 

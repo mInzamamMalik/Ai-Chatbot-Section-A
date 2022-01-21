@@ -1,0 +1,263 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "malik restaurant",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "showMenu",
+          "slots": [],
+          "samples": [
+            "please show me menu",
+            "what is in menu",
+            "menu",
+            "what do you have",
+            "I am hungry",
+            "say hello world",
+            "say hello"
+          ]
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "EmailIntent",
+          "slots": [],
+          "samples": [
+            "do you know my email",
+            "show my email",
+            "what is my email"
+          ]
+        },
+        {
+          "name": "deviceId",
+          "slots": [],
+          "samples": [
+            "my device id",
+            "show my device id",
+            "what is my device id"
+          ]
+        },
+        {
+          "name": "PlaceOrder",
+          "slots": [
+            {
+              "name": "dish",
+              "type": "dishes",
+              "samples": [
+                "{dish}",
+                "give me {dish}",
+                "I would like to have {dish}"
+              ]
+            },
+            {
+              "name": "qty",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "note order for {qty} {dish}",
+            "give me {qty} {dish}",
+            "I want {qty} plate {dish}",
+            "I want {dish}",
+            "give me {dish}",
+            "order order order",
+            "order please",
+            "book my order",
+            "note my order",
+            "take my order",
+            "place order"
+          ]
+        },
+        {
+          "name": "checkOut",
+          "slots": [],
+          "samples": [
+            "i would like to checkout",
+            "check out",
+            "checkout"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "values": [
+            {
+              "name": {
+                "value": "Seekh kabab",
+                "synonyms": [
+                  "syrup",
+                  " seal kebab",
+                  "five",
+                  "5",
+                  "sear kebab"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Gola kabab",
+                "synonyms": [
+                  "golla kebab",
+                  "four",
+                  "4",
+                  "gola kebab"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Chicken Reshmi kabab",
+                "synonyms": [
+                  "three",
+                  "3",
+                  "reshmi kebab",
+                  "reshmi",
+                  "chicken",
+                  "chicken reshmi",
+                  "chicken reshmi cabas"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Mutton kabab",
+                "synonyms": [
+                  "two",
+                  "2",
+                  "mutton kebab"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Beef kabab",
+                "synonyms": [
+                  "one",
+                  "1",
+                  "beef kebab"
+                ]
+              }
+            }
+          ],
+          "name": "dishes"
+        },
+        {
+          "values": [
+            {
+              "name": {
+                "value": "no",
+                "synonyms": [
+                  "none",
+                  "Negative",
+                  "nah",
+                  "nop",
+                  "don\u0027t",
+                  "dont",
+                  "no",
+                  "cancel"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "yes",
+                "synonyms": [
+                  "Affirmative ",
+                  "ay ay",
+                  "sure",
+                  "confirm",
+                  "yes i do",
+                  "I do",
+                  "yes",
+                  "yeah",
+                  "yep",
+                  "ok"
+                ]
+              }
+            }
+          ],
+          "name": "confirmation"
+        }
+      ]
+    },
+    "dialog": {
+      "intents": [
+        {
+          "name": "PlaceOrder",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "dish",
+              "type": "dishes",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.1281680942139.1615441069477"
+              }
+            },
+            {
+              "name": "qty",
+              "type": "AMAZON.NUMBER",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            }
+          ]
+        },
+        {
+          "name": "checkOut",
+          "confirmationRequired": true,
+          "prompts": {
+            "confirmation": "Confirm.Intent.678605722715"
+          },
+          "slots": [],
+          "delegationStrategy": "SKILL_RESPONSE"
+        }
+      ],
+      "delegationStrategy": "ALWAYS"
+    },
+    "prompts": [
+      {
+        "id": "Elicit.Slot.1281680942139.1615441069477",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "which dish would you like to have today, you can ask for the menu."
+          },
+          {
+            "type": "PlainText",
+            "value": "please tell me the name of dish, you can ask me to show menu."
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Intent.678605722715",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "this is intent confirmation "
+          }
+        ]
+      }
+    ]
+  },
+  "version": "17"
+}
