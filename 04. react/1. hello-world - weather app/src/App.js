@@ -27,13 +27,21 @@ function App() {
 
   const [weatherData, setWeatherData] = useState({})
 
+  // const [value1, value2] = ["pakistan", "india"]
+
 
   useEffect(() => {
+
+
     axios.get(`https://api.openweathermap.org/data/2.5/weather?q=karachi&appid=${apiKey}&units=metric`)
       .then((response) => {
         console.log("response", response.data);
 
         setWeatherData(response.data);
+
+        // setWeatherData((prevousValue) => {
+        //   return response.data
+        // });
 
 
       }).catch(e => {
@@ -49,6 +57,9 @@ function App() {
         });
 
       })
+
+
+
   }, [])
 
 
@@ -58,15 +69,15 @@ function App() {
       <div>
 
         {weatherData?.name}
-        <br/>
+        <br />
         {/* {weatherData?.weather[0]?.description} */}
-        <br/>
+        <br />
         {weatherData?.main?.temp_max}
-        <br/>
+        <br />
         {weatherData?.main?.temp}
-        <br/>
+        <br />
         {weatherData?.main?.temp_min}
-        <br/>
+        <br />
       </div>
 
 
