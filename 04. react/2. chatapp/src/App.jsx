@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import { Button, Form, ListGroup } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import { useEffect, useState } from "react"
 const axios = require('axios');
 
@@ -17,7 +17,7 @@ function App() {
     console.log("text: ", text);
 
     setMessages((prev) => {
-      return [{ sender: "user", text: text }, ...prev,];
+      return [{ sender: "user", text: text }, ...prev];
     });
 
     axios.post(`http://localhost:3000/talktochatbot`, {
@@ -27,7 +27,7 @@ function App() {
         console.log("response", response.data);
 
         setMessages((prev) => {
-          return [{ sender: "bot", text: text }, ...prev,];
+          return [{ sender: "bot", text: text }, ...prev];
         });
         e.target.reset();
         setText("");
