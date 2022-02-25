@@ -4,18 +4,16 @@ import dialogflow from '@google-cloud/dialogflow';
 
 const sessionClient = new dialogflow.SessionsClient();
 
-
 const app = express();
 app.use(cors())
 app.use(express.json())
-
 
 const PORT = process.env.PORT || 7001;
 
 app.post("/talktochatbot", async (req, res) => {
 
     const projectId = "saylani-class-delete-this"
-    const sessionId = "session123"
+    const sessionId = req.body.sessionId || "session123"
     const query = req.body.text;
     const languageCode = "en-US"
 
@@ -36,6 +34,8 @@ app.post("/talktochatbot", async (req, res) => {
         },
     };
     const responses = await sessionClient.detectIntent(request);
+
+    console.log("responses: ", responses);
 
     console.log("resp: ", responses[0].queryResult.fulfillmentText);
 
