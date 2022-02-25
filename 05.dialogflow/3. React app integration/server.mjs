@@ -7,6 +7,8 @@ const sessionClient = new dialogflow.SessionsClient();
 const app = express();
 app.use(cors())
 app.use(express.json())
+app.use('/', express.static(path.join(__dirname, 'web/build')))
+
 
 const PORT = process.env.PORT || 7001;
 
@@ -51,6 +53,11 @@ app.get("/profile", (req, res) => {
 app.get("/about", (req, res) => {
     res.send("some information about me");
 })
+
+app.get("/**", (req, res, next) => {
+    res.sendFile(path.join(__dirname, "./web/build/index.html"))
+})
+
 app.listen(PORT, () => {
     console.log(`server is running on port ${PORT}`);
 });
