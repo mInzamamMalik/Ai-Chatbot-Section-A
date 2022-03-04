@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dialogflow from '@google-cloud/dialogflow';
 import gcHelper from "google-credentials-helper"
-import { WebhookClient, Card, Suggestion } from 'dialogflow-fulfillment';
+import { WebhookClient, Card, Suggestion, Image, Payload } from 'dialogflow-fulfillment';
 
 
 gcHelper();
@@ -66,11 +66,42 @@ app.post("/webhook", (req, res) => {
         //     buttonUrl: "https://sysborg.com"
         // })
         // );
+
+        let image = new Image("https://media.nationalgeographic.org/assets/photos/000/263/26383.jpg");
+
+        agent.add(image)
+
+        // agent.add(` //ssml
+        //     <speak>
+        //         <prosody rate="slow" pitch="-2st">Can you hear me now?</prosody>
+        //     </speak>
+        // `);
+
         agent.add('Welcome to the Weather Assistant!');
         agent.add('you can ask me name, or weather updates');
         agent.add(new Suggestion('what is your name'));
         agent.add(new Suggestion('Weather update'));
         agent.add(new Suggestion('Cancel'));
+
+
+        const facebookSuggestionChip = [{
+            "content_type": "text",
+            "title": "I am quick reply",
+            // "image_url": "http://example.com/img/red.png",
+            // "payload":"<DEVELOPER_DEFINED_PAYLOAD>"
+        },
+        {
+            "content_type": "text",
+            "title": "I am quick reply 2",
+            // "image_url": "http://example.com/img/red.png",
+            // "payload":"<DEVELOPER_DEFINED_PAYLOAD>"
+        }]
+        const payload = new Payload(
+            'FACEBOOK',
+            facebookSuggestionChip
+        );
+        agent.add(payload)
+
     }
 
     function weather(agent) {
