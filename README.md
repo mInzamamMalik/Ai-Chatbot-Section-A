@@ -1,7 +1,7 @@
 # Ai-Chatbot-Section-A
 in this repo we will push class code
 
-
+this class video recording playlist: https://www.youtube.com/playlist?list=PLaZSdijfCCJBmCU8GBNX-ObFVllCV3AyQ
 
 
 https://www.babbel.com/en/magazine/english-vowel-sounds
